@@ -25,9 +25,12 @@ public class PPeaklistFiles extends JPanel
     public ArrayList<TableColumn> removedColumns = new ArrayList<TableColumn>();
     public JTable table = new JTable(defaultTableModel);
     public JLabel labelStatusBarPeaklistFiles = new JLabel();
+    public boolean showMarkers = true;
+    public FMainWindow fmain;
     
-    public PPeaklistFiles(String title)
+    public PPeaklistFiles(String title, FMainWindow fmain)
     {
+    	this.fmain = fmain;
         setLayout(new BorderLayout(2, 2));
         //
         //
@@ -62,6 +65,8 @@ public class PPeaklistFiles extends JPanel
         //
         scrollPanePeaklistFiles.setMinimumSize(new Dimension(200, 0));
         scrollPanePeaklistFiles.setPreferredSize(new Dimension(200, 0));
+        
+        
     }
     
     public void clearTable()
@@ -101,10 +106,33 @@ public class PPeaklistFiles extends JPanel
         });
     }
     
+    public void removePeaklistFromTable(final OPeaklist peaklist) {
+    	SwingUtilities.invokeLater(new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    defaultTableModel.removeRow(peaklist);
+                    defaultTableModel.fireTableDataChanged();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    	
+    }
+    
+    
+    
     public void setVisibleColumns(boolean showName, boolean showSpectrumID, boolean showSpecies, boolean showStrain)
     {
-        Boolean[] columnsToShow = new Boolean[] { true, true, showName, showSpectrumID, showSpecies, showStrain };
+        Boolean[] columnsToShow = new Boolean[] { this.showMarkers, this.showMarkers, showName, showSpectrumID, showSpecies, showStrain };
         //
+        
         TableColumnModel tableColumnModel = table.getColumnModel();
         while (tableColumnModel.getColumnCount() > 0)
         {
@@ -128,6 +156,17 @@ public class PPeaklistFiles extends JPanel
                 }
             }
         }
+    }
+    
+    public void setMarkersVisibility(boolean value)
+    {
+    	this.showMarkers = value;
+    	this.setVisibleColumns( 
+    			fmain.checkBoxMenuItemShowMSName.isSelected(),
+    			fmain.checkBoxMenuItemShowMSSpectrumID.isSelected(),
+    			fmain.checkBoxMenuItemShowMSSpecies.isSelected(),
+    			fmain.checkBoxMenuItemShowMSStrain.isSelected()
+    	);
     }
 }
 

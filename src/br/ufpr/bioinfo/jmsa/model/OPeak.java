@@ -25,6 +25,6 @@ public class OPeak
         reso = Double.parseDouble(elementpk.getElementsByTagName("reso").item(0).getTextContent());
         rind = Double.parseDouble(elementpk.getElementsByTagName("rind").item(0).getTextContent());
         s2n = Double.parseDouble(elementpk.getElementsByTagName("s2n").item(0).getTextContent());
-        type = Double.parseDouble(elementpk.getElementsByTagName("type").item(0).getTextContent());
+        //type = Double.parseDouble(elementpk.getElementsByTagName("type").item(0).getTextContent());
     }
 }

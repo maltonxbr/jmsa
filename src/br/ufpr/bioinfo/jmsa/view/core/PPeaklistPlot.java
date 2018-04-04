@@ -22,7 +22,7 @@ public class PPeaklistPlot extends JPanel
     //
     public TitledBorder titledBorder = BorderFactory.createTitledBorder("");
     
-    public PPeaklistPlot(OPeaklist peaklist)
+    public PPeaklistPlot(OPeaklist peaklist, boolean intensity)
     {
         this.peaklist = peaklist;
         //
@@ -43,7 +43,11 @@ public class PPeaklistPlot extends JPanel
         for (Iterator<OPeak> iterator = peaklist.peaks.iterator(); iterator.hasNext();)
         {
             OPeak peak = iterator.next();
-            intervalSeries.add(peak.absi, peak.absi, peak.absi, peak.mass, peak.mass, peak.mass);
+            double val = peak.absi;
+            if(val > 0 && !intensity){
+            	val = 1;
+            }
+            intervalSeries.add(peak.mass, peak.mass, peak.mass, val, val, val);
         }
         dataset.addSeries(intervalSeries);
         //

@@ -77,6 +77,36 @@ public class PPeaklistSimilarity extends JPanel
             column.setPreferredWidth(200);
         }
     }
+    
+    public String csvTable(){
+    	String tableCsv = ",";
+    	
+    	for (int col = 0; col < peaklists.size(); col++){
+    		tableCsv += "\"";
+    		tableCsv+=(peaklists.get(col).toString())+"\n";
+    		//tableCsv+=(peaklists.get(col).jmsainfoName);
+    		tableCsv+="\",";
+    	}
+    	tableCsv+="\n";
+    	
+    	for (int col = 0; col < peaklists.size(); col++)
+        {
+    		tableCsv += "\"";
+    		tableCsv+=(peaklists.get(col).toString())+"\n";
+    		//tableCsv+=(peaklists.get(col).jmsainfoName);
+    		tableCsv+="\"";
+    		OPeaklist peaklistCol = peaklists.get(col);
+            for (int row = 0; row < peaklists.size(); row++)
+            {
+                OPeaklist peaklistRow = peaklists.get(row);
+                double similarity = CPeaklistAnalyser.getPeakistSimilarity(peaklistCol, peaklistRow);
+                tableCsv+=","+(similarity*100);
+            }
+    		tableCsv+="\n";
+        }
+    	
+    	return tableCsv;
+    }
 }
 
 class PeaklistSimilarityTableStringCellRenderer implements TableCellRenderer
@@ -107,11 +137,11 @@ class PeaklistSimilarityTableStringCellRenderer implements TableCellRenderer
         {
             peaklist = (OPeaklist) value;
         }
-        else if ((column == 0) && (row >= 0))
+        else if ((column == 0) && (row >= 0 && row < peaklists.size()))
         {
             peaklist = peaklists.get(row);
         }
-        else if ((column > 0) && (row < 0))
+        else if ((column > 0) && (row < 0 && row < peaklists.size()))
         {
             peaklist = peaklists.get(column - 1);
         }

@@ -137,4 +137,21 @@ public class PeaklistFilesTableModel extends AbstractTableModel
         }
         fireTableCellUpdated(row, col);
     }
+    
+    public void setAllValuesAt(boolean value, int col){
+    	int row;
+    	for(row = 0; row < peaklists.size(); row++){
+    		OPeaklist peaklist = peaklists.get(row);
+            switch (col)
+            {
+                case 0:
+                    peaklist.selected = (Boolean) value;
+                    break;
+                case 1:
+                    peaklist.reflex = (Boolean) value;  
+                    break;
+            }
+    	}
+    	fireTableCellUpdated(0, 0);
+    }
 }

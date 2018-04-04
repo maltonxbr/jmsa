@@ -65,7 +65,7 @@ public class OPeaklist
         }
         else
         {
-            System.out.println("Peaklist inválido: " + peaklistFile.getAbsolutePath());
+            System.out.println("Peaklist invÃ¡lido: " + peaklistFile.getAbsolutePath());
         }
     }
     
@@ -81,14 +81,11 @@ public class OPeaklist
         return peaklistTable;
     }
     
-    public PPeaklistPlot getPeaklistPlot()
+    public PPeaklistPlot getPeaklistPlot(boolean intensity)
     {
         if (valid)
         {
-            if (peaklistPlot == null)
-            {
-                peaklistPlot = new PPeaklistPlot(this);
-            }
+                peaklistPlot = new PPeaklistPlot(this,intensity);  
         }
         return peaklistPlot;
     }
@@ -141,8 +138,8 @@ public class OPeaklist
                         version = elementpklist.getAttributes().getNamedItem("version").getNodeValue();
                         //
                         //
-                        //TODO MALTON: Todo o conteúdo de 'pklist' poderia ser preenchido posteriormente para poupar processamento
-                        //TODO MALTON: Posteriormente como, ao selecionar um Peaklist para visualização
+                        //TODO MALTON: Todo o conteï¿½do de 'pklist' poderia ser preenchido posteriormente para poupar processamento
+                        //TODO MALTON: Posteriormente como, ao selecionar um Peaklist para visualizaï¿½ï¿½o
                         NodeList nodeListpk = elementpklist.getElementsByTagName("pk");
                         if (nodeListpk != null)
                         {

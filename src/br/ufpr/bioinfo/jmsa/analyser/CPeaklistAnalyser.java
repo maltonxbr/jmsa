@@ -121,9 +121,9 @@ public class CPeaklistAnalyser
         int smRowLen = simMatrix.length;
         int smColLen = simMatrix[0].length;
         
-        while ((smRow < (smRowLen - 1)) || (smCol < (smColLen - 1)))
+        while ((smRow < (smRowLen - 1)) && (smCol < (smColLen - 1)))
         {
-            //            Em S[][] verificar quem é maior:
+            //            Em S[][] verificar quem ï¿½ maior:
             //            S[+1][]     ABAIXO
             //            S[][+1]     DIREITA
             //            S[+1][+1]    DIAGONAL
@@ -137,7 +137,7 @@ public class CPeaklistAnalyser
             }
             if ((smCol + 1) < (smColLen))
             {
-                right = simMatrix[smRow][smCol + 1];
+            	right = simMatrix[smRow][smCol + 1];
             }
             if ( ((smRow + 1) < smRowLen) && ((smCol + 1) < (smColLen)) )
             {

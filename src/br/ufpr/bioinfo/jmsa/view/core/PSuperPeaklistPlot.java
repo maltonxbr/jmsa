@@ -38,7 +38,7 @@ public class PSuperPeaklistPlot extends JPanel
         setMinimumSize(new Dimension(30, 30));
     }
     
-    public void buildPlot(List<OPeaklist> peaklists)
+    public void buildPlot(List<OPeaklist> peaklists, boolean intensity)
     {
         removeAll();
         //
@@ -53,6 +53,15 @@ public class PSuperPeaklistPlot extends JPanel
                 if (peaklist.reflex)
                 {
                     shownABSI = -peak.absi;
+                }
+
+                if(!intensity){
+	                if(shownABSI > 0){
+	                	shownABSI = 1;
+	                }
+	                if(shownABSI < 0){
+	                	shownABSI = -1;
+	                }
                 }
                 //                intervalSeries.add(peak.mass, peak.mass, peak.mass, shownABSI, shownABSI, shownABSI);
                 double base = (peak.area * 2) / peak.absi;
