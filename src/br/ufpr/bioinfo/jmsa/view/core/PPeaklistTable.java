@@ -42,13 +42,33 @@ public class PPeaklistTable extends JPanel
     
     private void fillTable()
     {
-        defaultTableModel.addColumn("", new Object[] { "ABSI", "MASS" });
+        defaultTableModel.addColumn("", new Object[] {
+        	"ABSI",
+        	"MASS",
+        	"IND",
+        	"LIND",
+        	"METH",
+        	"RESO",
+        	"RIND",
+        	"S2N",
+        	"TYPE"
+        });
         //        defaultTableModel.addColumn("TESTE", new Object[] { new Boolean(true), new Boolean(false) });
         //
         //
         for (OPeak peak : peaklist.peaks)
         {
-            defaultTableModel.addColumn("", new Object[] { decimalFormat.format(peak.absi), decimalFormat.format(peak.mass) });
+            defaultTableModel.addColumn("", new Object[] {
+            	decimalFormat.format(peak.absi),
+            	decimalFormat.format(peak.mass),
+            	decimalFormat.format(peak.ind),
+            	decimalFormat.format(peak.lind),
+            	decimalFormat.format(peak.meth),
+            	decimalFormat.format(peak.reso),
+            	decimalFormat.format(peak.rind),
+            	decimalFormat.format(peak.s2n),
+            	decimalFormat.format(peak.type)
+            });
         }
         //        
         //        
