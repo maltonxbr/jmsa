@@ -95,7 +95,7 @@ public class FMainWindow extends JFrame
     public JButton buttonPeaklist = new JButton("Peaklist");
     public JButton buttonAnalyser = new JButton("Analyser");
     public JButton buttonCluster = new JButton("Cluster");
-    public JButton buttonClassifier = new JButton("Classifier");
+    public JButton buttonClassifier = new JButton("DB search");
     public JButton buttonInformation = new JButton("Information");
     public JButton buttonSelectAll = new JButton("Select All");
     public JButton buttonDeselectAll = new JButton("Deselect All");
@@ -175,7 +175,7 @@ public class FMainWindow extends JFrame
         tabbedPaneMain.addTab("Peaklist", panelPeaklist);
         tabbedPaneMain.addTab("Analyser", superPeaklistPlot);
         tabbedPaneMain.addTab("Cluster", panelCluster);
-        tabbedPaneMain.addTab("Classifier", panelClassifier);
+        tabbedPaneMain.addTab("DB search", panelClassifier);
         tabbedPaneMain.addTab("Information", panelInformation);
         panelPeaklist.add(tabbedPanePeaklist, BorderLayout.CENTER);
         
@@ -429,7 +429,7 @@ public class FMainWindow extends JFrame
                         panelCluster.reloadDendrogram(peaklists);
                     	
                         break;
-                    case "tab-classifier":
+                    case "tab-db-search":
                     	List<OPeaklist> dbpeaklists = panelLoadingPeaklistFilesDB.defaultTableModel.getSelectedPeaklists();
                         dbpeaklists.addAll(peaklists);
                     	tabbedPaneMain.setSelectedComponent(panelClassifier);
@@ -511,7 +511,7 @@ public class FMainWindow extends JFrame
         buttonPeaklist.setActionCommand("tab-peaklist");
         buttonAnalyser.setActionCommand("tab-analyser");
         buttonCluster.setActionCommand("tab-cluster");
-        buttonClassifier.setActionCommand("tab-classifier");
+        buttonClassifier.setActionCommand("tab-db-search");
         buttonInformation.setActionCommand("tab-information");
         buttonSelectAll.setActionCommand("select-all");
         buttonDeselectAll.setActionCommand("deselect-all");
