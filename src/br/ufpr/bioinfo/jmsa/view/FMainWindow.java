@@ -243,7 +243,6 @@ public class FMainWindow extends JFrame
 	                	}
 	                }
 	                
-	                
                     panelClassifier.reloadClassifier(peaklists,mergeDbLoad);
                     
                     
