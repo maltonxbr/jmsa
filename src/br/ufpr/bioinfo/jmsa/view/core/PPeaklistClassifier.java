@@ -39,6 +39,8 @@ public class PPeaklistClassifier extends JPanel
     public DefaultTableModel defaultTableModel = new DefaultTableModel();
     public JTable table = new JTable(defaultTableModel);
     public JPanel myContent = new JPanel();
+    public JPanel spectreVisualizer = new JPanel();
+    
     public JLabel selectedPeaksNumber = null;
     private JButton buttonClassify = new JButton("Classify");
     //
@@ -67,6 +69,7 @@ public class PPeaklistClassifier extends JPanel
         scrollPanePeaklistFiles.setPreferredSize(new Dimension(200, 0));
         
         //
+        myContent.add(spectreVisualizer);
         
         buttonClassify.addActionListener(new ActionListener() {
             @Override
@@ -74,6 +77,20 @@ public class PPeaklistClassifier extends JPanel
             	selectPeak();
             }
         });
+    }
+    
+    public void reloadSpectresVisualizer() {
+    	int selected = selectField.getSelectedIndex();
+    	OPeaklist peaklistSelected = loadingPeakLists.get(selected);
+    	selectedPeaksNumber.setText(peaklistSelected.peaks.size()+" peaks");
+    	
+        spectreVisualizer.removeAll();
+        
+        spectreVisualizer.add(peaklistSelected.getPeaklistPlot(false));//checkBoxMenuItemPlotEnableIntensity.isSelected())
+        spectreVisualizer.add(peaklistSelected.getPeaklistTable());
+        revalidate();
+        
+        
     }
     
     private static class JTableButtonRenderer implements TableCellRenderer {        
@@ -121,12 +138,13 @@ public class PPeaklistClassifier extends JPanel
     	
     	distances = new NameNumber[peaklists.size()];
     	
-
-        int selected = selectField.getSelectedIndex();
     	
+    	
+        int selected = selectField.getSelectedIndex();
+        
        
         OPeaklist peaklistSelected = loadingPeakLists.get(selected);
-        selectedPeaksNumber.setText(peaklistSelected.peaks.size()+" peaks");
+        
         
         defaultTableModel.setRowCount(peaklists.size());
         defaultTableModel.setColumnCount(0);
@@ -197,6 +215,7 @@ public class PPeaklistClassifier extends JPanel
         table.getTableHeader().setDefaultRenderer(new PeaklistSimilarityTableStringCellRenderer(peaklists, table.getTableHeader().getDefaultRenderer()));
         //
         defaultTableModel.fireTableDataChanged();
+        
     }
     
     
@@ -212,6 +231,7 @@ public class PPeaklistClassifier extends JPanel
     	
     	myContent.remove(scrollPanePeaklistFiles);
     	myContent.removeAll();
+    	
     	
     	add(scrollPanePeaklistFiles, BorderLayout.CENTER);
     	
@@ -231,15 +251,21 @@ public class PPeaklistClassifier extends JPanel
     	
     	selectField.setVisible(true);
     	
-    	
-    	
+    	selectField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	reloadSpectresVisualizer();
+            }
+        });
+
     	
     	
     	JPanel panel = new JPanel();
     	panel.add(selectField);
     	
-    	myContent.add(panel);
     	
+    	myContent.add(panel);
+    	myContent.add(spectreVisualizer);
     	myContent.add(table);
     	
     	scrollPanePeaklistFiles.setViewportView(myContent);
@@ -249,11 +275,13 @@ public class PPeaklistClassifier extends JPanel
     	
     	
     	selectedPeaksNumber = new JLabel("");
+    	
+
     	panel.add(selectedPeaksNumber);
     	panel.add(buttonClassify);
     	
-        this.revalidate();
-        
+    	reloadSpectresVisualizer();
+    	
     }
     
     public void fillTable(List<OPeaklist> peaklists)
