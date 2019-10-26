@@ -4,9 +4,21 @@ import br.ufpr.bioinfo.jmsa.model.OPeaklist;
 
 public class CPeaklistAnalyser
 {
-    public static double getPeakistSimilarity(OPeaklist peaklistA, OPeaklist peaklistB)
+	
+	public static double getPeakistSimilarity(OPeaklist peaklistA, OPeaklist peaklistB)
     {
-        Double[][] dataA = new Double[2][peaklistA.peaks.size()];
+		Double[][] simMatrix = constructSimMatrix(peaklistA,peaklistB);
+        return getAverageNeedlemanWunschWithoutScore(simMatrix);
+    }
+	public static int getMatchPeaksSimilarity(OPeaklist peaklistA, OPeaklist peaklistB)
+    {
+		Double[][] simMatrix = constructSimMatrix(peaklistA,peaklistB);
+        return getNeedlemanWunschWithoutMatchs(simMatrix);
+    }
+	
+	
+	private static Double[][] constructSimMatrix(OPeaklist peaklistA, OPeaklist peaklistB){
+		Double[][] dataA = new Double[2][peaklistA.peaks.size()];
         Double[][] dataB = new Double[2][peaklistB.peaks.size()];
         
         for (int i = 0; i < peaklistA.peaks.size(); i++)
@@ -22,10 +34,8 @@ public class CPeaklistAnalyser
         
         Double[][] distMatrix = constructDistMatrix(dataA, dataB);
         Double[][] simMatrix = constructSimMatrix(distMatrix);
-        
-        return getAverageNeedlemanWunschWithoutScore(simMatrix);
-    }
-    
+        return simMatrix;
+	}
     /**
      * @param dataA is a matrix. Rows represent features/time points. Columns represent a sample/time-series;
      * @param dataB is a matrix. Rows represent features/time points. Columns represent a sample/time-series;
@@ -49,6 +59,8 @@ public class CPeaklistAnalyser
      * @param distMatrix: matrix, disimilarity measures
      * @return simMatrix: matrix, similarity measures;
      */
+    
+    
     public static Double[][] constructSimMatrix(Double[][] distMatrix)
     {
         //Gaussian similarity function (transform disimilarity Euclidean to similarity)
@@ -88,12 +100,12 @@ public class CPeaklistAnalyser
         }
         
         //distEu[1][2]
-        //    SEGUNDA coluna de A
+        //    Second column from A
         //        A[0][1],A[1][1],A[2][1]
-        //    Menos TERCEIRA coluna de B
+        //    Less Third Column from B
         //        B[0][2],B[1][2],B[2][2]
-        //    Ao quadrado
-        //    Somado
+        //    Square
+        //    Sum
         for (int distEuRow = 0; distEuRow < cA; distEuRow++)
         {
             for (int distEuCol = 0; distEuCol < cB; distEuCol++)
@@ -111,11 +123,34 @@ public class CPeaklistAnalyser
         return distEu;
     }
     
-    private static double getAverageNeedlemanWunschWithoutScore(Double[][] simMatrix)
+    
+    private static class AvgPeaks 
     {
-        double similarity = 0.0;
+        public AvgPeaks(double sum, int npeaks, int matchpeaks) {
+            this.sum = sum;
+            this.npeaks = npeaks;
+            this.matchpeaks = matchpeaks;
+        }
+
+        public double getSum() {
+        	return this.sum;
+        }
+        public double getNpeaks() {
+        	return this.npeaks;
+        }
+        public double getMatchpeaks() {
+        	return this.matchpeaks;
+        }
+        
+        public double sum;
+        public int npeaks;
+        public int matchpeaks;
+    }
+    
+    private static AvgPeaks NeedlemanWunschWithoutScore(Double[][] simMatrix) {
         Double sum = 0.0;
         Integer nroPeaks = 0;
+        Integer matchpeaks = 0;
         int smRow = 0;
         int smCol = 0;
         int smRowLen = simMatrix.length;
@@ -123,10 +158,10 @@ public class CPeaklistAnalyser
         
         while ((smRow < (smRowLen - 1)) && (smCol < (smColLen - 1)))
         {
-            //            Em S[][] verificar quem � maior:
-            //            S[+1][]     ABAIXO
-            //            S[][+1]     DIREITA
-            //            S[+1][+1]    DIAGONAL
+            //            Em S[][] Verify who is greather:
+            //            S[+1][]     Down
+            //            S[][+1]     Right
+            //            S[+1][+1]    Diagonal
             double diagonal = 0;
             double down = 0;
             double right = 0;
@@ -151,6 +186,8 @@ public class CPeaklistAnalyser
                 nroPeaks++;
                 smRow++;
                 smCol++;
+                matchpeaks++;
+                
             }
             else if ((down >= diagonal) && (down >= right))
             {
@@ -165,11 +202,26 @@ public class CPeaklistAnalyser
                 smCol++;
             }
         }
+        return new AvgPeaks(sum,nroPeaks,matchpeaks+1);
+    }
+    
+    private static double getAverageNeedlemanWunschWithoutScore(Double[][] simMatrix)
+    {
+    	double similarity = 0.0;
+    	AvgPeaks sa = NeedlemanWunschWithoutScore(simMatrix);
+    	int nroPeaks = sa.npeaks;
+    	double sum = sa.sum;
         
         if (nroPeaks > 0)
         {
             similarity = sum / nroPeaks;
         }
         return similarity;
+    }
+    
+    private static int getNeedlemanWunschWithoutMatchs(Double[][] simMatrix)
+    {
+    	AvgPeaks sa = NeedlemanWunschWithoutScore(simMatrix);	
+        return sa.matchpeaks;
     }
 }
